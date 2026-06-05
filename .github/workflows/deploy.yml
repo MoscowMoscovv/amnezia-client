@@ -83,7 +83,7 @@ jobs:
       shell: bash
       env:
         QT_INSTALL_DIR: ${{ runner.temp }}
-      run: deploy/build.sh --generator Ninja --installer all
+      run: deploy/build_linux.sh --generator Ninja --installer all
 
     - name: 'Upload installer artifact'
       uses: actions/upload-artifact@v7
@@ -177,7 +177,7 @@ jobs:
         QT_INSTALL_DIR: ${{ runner.temp }}
       run: |
         set WIX_ROOT_PATH="${{ env.USERPROFILE }}\.dotnet\tools"
-        deploy\build.bat --installer all
+        deploy\build_windows.bat --installer all
 
     - name: 'Upload WIX installer artifact'
       uses: actions/upload-artifact@v7
@@ -510,7 +510,7 @@ jobs:
         QT_ANDROID_KEYSTORE_STORE_PASS: ${{ secrets.ANDROID_RELEASE_KEYSTORE_KEY_PASS }}
       shell: bash
       run: |
-        deploy/build.sh -t android --sign --aab
+        deploy/build_android.sh -t android --sign --aab
 
         VERSION=$(grep CMAKE_PROJECT_VERSION:STATIC deploy/build/CMakeCache.txt | cut -d= -f2)
 
