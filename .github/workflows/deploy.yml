@@ -31,7 +31,6 @@ jobs:
   Build-Linux-Ubuntu:
     runs-on: android-runner
 
-    needs: Bake-Prebuilts-Linux
     if: ${{ always() }}
 
     env:
@@ -107,7 +106,6 @@ jobs:
   Build-Windows:
     runs-on: windows-latest
 
-    needs: Bake-Prebuilts-Windows
     if: ${{ always() }}
 
     env:
@@ -202,7 +200,7 @@ jobs:
   Build-iOS:
     runs-on: macos-latest
 
-    needs: Bake-Prebuilts-iOS
+
     if: ${{ always() }}
 
     env:
@@ -305,7 +303,6 @@ jobs:
   Build-MacOS-NE:
     runs-on: macos-latest
 
-    needs: Bake-Prebuilts-MacOS-NE
     if: ${{ always() }}
 
     env:
@@ -397,7 +394,6 @@ jobs:
   Build-Android:
     runs-on: android-runner
 
-    needs: Bake-Prebuilts-Android
     if: ${{ always() }}
 
     env:
