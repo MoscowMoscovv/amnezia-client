@@ -146,6 +146,7 @@ jobs:
 
     - name: Setup CMake
       uses: lukka/get-cmake@latest
+      id: cmake
       
     - name: 'Setup mvsc'
       uses: ilammy/msvc-dev-cmd@v1
@@ -178,8 +179,10 @@ jobs:
     - name: 'Build project'
       shell: cmd
       env:
+        CMAKE_BIN_DIR: ${{ steps.cmake.outputs.cmakePath }}
         QT_INSTALL_DIR: ${{ runner.temp }}
       run: |
+        set PATH=%CMAKE_BIN_DIR%;%PATH%
         set WIX_ROOT_PATH="${{ env.USERPROFILE }}\.dotnet\tools"
         deploy\build_windows.bat --installer all
 
