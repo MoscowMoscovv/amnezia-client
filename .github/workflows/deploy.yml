@@ -119,6 +119,7 @@ jobs:
       DEV_S3_ENDPOINT: ${{ secrets.DEV_S3_ENDPOINT }}
       FREE_V2_ENDPOINT: ${{ secrets.FREE_V2_ENDPOINT }}
       PREM_V1_ENDPOINT: ${{ secrets.PREM_V1_ENDPOINT }}
+      BUILD_ARCH: 64
 
     steps:
     - name: 'Get sources'
@@ -295,97 +296,6 @@ jobs:
           sed -e '/-Xcc -DDEV_AGW_PUBLIC_KEY/,/-Xcc/ { /-Xcc/!d; }' -e '/-Xcc -DDEV_AGW_PUBLIC_KEY/d' | \
           sed -e '/-DPROD_AGW_PUBLIC_KEY/,/-D/ { /-D/!d; }' -e '/-DPROD_AGW_PUBLIC_KEY/d' | \
           sed -e '/-DDEV_AGW_PUBLIC_KEY/,/-D/ { /-D/!d; }' -e '/-DDEV_AGW_PUBLIC_KEY/d'
-
-# ------------------------------------------------------
-
-# ------------------------------------------------------
-
-  Build-MacOS-NE:
-    runs-on: macos-latest
-
-    if: ${{ always() }}
-
-    env:
-      QT_VERSION: 6.10.1
-
-      MAC_TEAM_ID: ${{ secrets.MAC_TEAM_ID }}
-
-      MAC_APP_CERT_CERT: ${{ secrets.MAC_APP_CERT_CERT }}
-      MAC_SIGNER_ID: ${{ secrets.MAC_SIGNER_ID }}
-      MAC_APP_CERT_PW: ${{ secrets.MAC_APP_CERT_PW }}
-
-      PROD_AGW_PUBLIC_KEY: ${{ secrets.PROD_AGW_PUBLIC_KEY }}
-      PROD_S3_ENDPOINT: ${{ secrets.PROD_S3_ENDPOINT }}
-      FALLBACK_S3_ENDPOINT: ${{ secrets.FALLBACK_S3_ENDPOINT }}
-      DEV_AGW_PUBLIC_KEY: ${{ secrets.DEV_AGW_PUBLIC_KEY }}
-      DEV_AGW_ENDPOINT: ${{ secrets.DEV_AGW_ENDPOINT }}
-      DEV_S3_ENDPOINT: ${{ secrets.DEV_S3_ENDPOINT }}
-      FREE_V2_ENDPOINT: ${{ secrets.FREE_V2_ENDPOINT }}
-      PREM_V1_ENDPOINT: ${{ secrets.PREM_V1_ENDPOINT }}
-
-    steps:
-    - uses: ./.github/actions/apple-setup-provisioning-profile
-      with:
-        provisioning_profile_base64: ${{ secrets.MAC_APP_PROVISIONING_PROFILE }}
-
-    - uses: ./.github/actions/apple-setup-provisioning-profile
-      with:
-        provisioning_profile_base64: ${{ secrets.MAC_NE_PROVISIONING_PROFILE }}
-
-    - name: 'Setup xcode'
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '26.1'
-
-    - name: 'Install desktop Qt'
-      uses: jurplel/install-qt-action@v3
-      with:
-        version: ${{ env.QT_VERSION }}
-        host: 'mac'
-        target: 'desktop'
-        modules: 'qtremoteobjects qt5compat qtshadertools qtmultimedia'
-        arch: 'clang_64'
-        dir: ${{ runner.temp }}
-        set-env: 'true'
-        extra: '--base ${{ env.QT_MIRROR }}'
-
-    - name: 'Install go'
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.24'
-        cache: false
-
-    - name: 'Setup gomobile'
-      run: |
-          export PATH=$PATH:~/go/bin
-          go install golang.org/x/mobile/cmd/gomobile@latest
-          gomobile init
-
-    - name: 'Get sources'
-      uses: actions/checkout@v4
-      with:
-        submodules: 'true'
-        fetch-depth: 10
-
-    - name: 'Setup python'
-      uses: actions/setup-python@v6
-      with:
-        python-version: 3.14
-
-    - name: 'Install conan'
-      run: pip install "conan==2.28.0"
-
-    - name: 'Build project'
-      run: |
-        export QT_BIN_DIR="${{ runner.temp }}/Qt/${{ env.QT_VERSION }}/macos/bin"
-        bash deploy/build_macos_ne.sh
-
-    - name: 'Upload unpacked artifact'
-      uses: actions/upload-artifact@v4
-      with:
-        name: AmneziaVPN_MacOS_unpacked
-        path: deploy/build/client/AmneziaVPN.app
-        retention-days: 7
 
 # ------------------------------------------------------
 

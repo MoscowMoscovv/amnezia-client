@@ -28,17 +28,22 @@ REM Hold on to current directory
 set PROJECT_DIR=%cd%
 set SCRIPT_DIR=%PROJECT_DIR:"=%\deploy
 
-set WORK_DIR=%SCRIPT_DIR:"=%\build_%BUILD_ARCH:"=%
+
+set BUILD_ARCH=%BUILD_ARCH:"=%
+if not defined BUILD_ARCH set BUILD_ARCH=64
+
+set WORK_DIR=%SCRIPT_DIR%\build_%BUILD_ARCH%
+
 set APP_NAME=AmneziaVPN
 set APP_FILENAME=%APP_NAME:"=%.exe
 set SERVICE_FILENAME=%APP_NAME:"=%-service.exe
 set APP_DOMAIN=org.amneziavpn.package
 set OUT_APP_DIR=%WORK_DIR:"=%\client\release
-set PREBILT_DEPLOY_DATA_DIR=%PROJECT_DIR:"=%\client\3rd-prebuilt\deploy-prebuilt\windows\x%BUILD_ARCH:"=%
-set DEPLOY_DATA_DIR=%SCRIPT_DIR:"=%\data\windows\x%BUILD_ARCH:"=%
+set PREBILT_DEPLOY_DATA_DIR=%PROJECT_DIR:"=%\client\3rd-prebuilt\deploy-prebuilt\windows\x%BUILD_ARCH%
+set DEPLOY_DATA_DIR=%SCRIPT_DIR:"=%\data\windows\x%BUILD_ARCH%
 set INSTALLER_DATA_DIR=%WORK_DIR:"=%\installer\packages\%APP_DOMAIN:"=%\data
-set TARGET_FILENAME=%PROJECT_DIR:"=%\%APP_NAME:"=%_x%BUILD_ARCH:"=%.exe
-set TARGET_MSI_FILENAME=%PROJECT_DIR:"=%\%APP_NAME:"=%_x%BUILD_ARCH:"=%.msi
+set TARGET_FILENAME=%PROJECT_DIR:"=%\%APP_NAME:"=%_x%BUILD_ARCH%.exe
+set TARGET_MSI_FILENAME=%PROJECT_DIR:"=%\%APP_NAME:"=%_x%BUILD_ARCH%.msi
 set STAGE_DIR=%WORK_DIR:"=%\stage
 
 echo "Environment:"
