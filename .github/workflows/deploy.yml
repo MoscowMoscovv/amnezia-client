@@ -147,7 +147,7 @@ jobs:
     - name: Setup CMake
       uses: lukka/get-cmake@latest
       id: cmake
-      
+
     - name: 'Setup mvsc'
       uses: ilammy/msvc-dev-cmd@v1
       with:
@@ -181,7 +181,7 @@ jobs:
       env:
         PATH: ${{ env.PATH }};${{ steps.cmake.outputs.cmakePath }}
         QT_INSTALL_DIR: ${{ runner.temp }}
-      run:
+      run: |
         where cmake
         cmake --version
         set WIX_ROOT_PATH="${{ env.USERPROFILE }}\.dotnet\tools"
